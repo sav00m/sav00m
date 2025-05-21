@@ -2,7 +2,7 @@ name: generate snake animation
 
 on:
   schedule:
-    - cron: "0 */12 * * *" # every 12 hours
+    - cron: "0 */12 * * *"
   workflow_dispatch:
   push:
     branches:
@@ -27,7 +27,8 @@ jobs:
       - name: Deploy to output branch
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: output           # The branch the action should deploy to
-          folder: dist             # The folder the output files are located in
+          branch: output
+          folder: dist
+          clean: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
