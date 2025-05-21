@@ -1,14 +1,9 @@
-name: generate animation
+name: generate snake animation
 
 on:
-  # run automatically every 12 hours
   schedule:
     - cron: "0 */12 * * *"
-
-  # allow manual run
   workflow_dispatch:
-
-  # run on every push to main
   push:
     branches:
       - main
@@ -22,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Generate github-contribution-grid-snake.svg
+      - name: Generate snake animation
         uses: Platane/snk/svg-only@v3
         with:
           github_user_name: mosh3eb
@@ -32,14 +27,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Check if dist directory exists
+      - name: Verify dist/ folder was created
         run: |
-          if [ ! -d "dist" ]; then
-            echo "dist directory was not created!"
+          if [ ! -d dist ]; then
+            echo "❌ 'dist/' folder not found. Snake generation failed."
             exit 1
           fi
 
-      - name: Push github-contribution-grid-snake.svg to the output branch
+      - name: Setup Git identity
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+
+      - name: Push generated snake to output branch
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           target_branch: output
